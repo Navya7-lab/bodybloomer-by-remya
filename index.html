@@ -1615,7 +1615,7 @@
                         amount: totalPaise,
                         currency: 'INR',
                         receipt: `bb_${Date.now()}`,
-                        notes: { customer: name, email, phone, address, items: JSON.stringify(orderItems) },
+                        notes: { customer: name, email, phone: '+91' + phone, address, items: JSON.stringify(orderItems) },
                     }),
                 });
 
@@ -1634,7 +1634,7 @@
                     handler: function (response) {
                         handlePaymentSuccess(response);
                     },
-                    prefill: { name, email, contact: phone },
+                    prefill: { name, email, contact: '+91' + phone },
                     notes: { address },
                     theme: { color: '#8B6F47' },
                     modal: {
