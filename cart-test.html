@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; padding: 20px; }
+        
+        /* Simple Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+        }
+        
+        .logo { font-size: 24px; font-weight: bold; color: #8B6F47; }
+        
+        .nav-icons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .nav-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .nav-icon svg { width: 24px; height: 24px; }
+        .nav-icon span { font-size: 11px; margin-top: 3px; }
+        
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+        
+        .badge.hidden { display: none; }
+        
+        /* Products */
+        .products {
+            margin-top: 100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .product-card {
+            background: #f9f9f9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title { font-weight: 600; margin-bottom: 5px; }
+        .product-price { color: #8B6F47; font-size: 18px; font-weight: bold; }
+        
+        .add-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            background: #8B6F47;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .add-btn:hover { background: #6B5635; }
+        
+        /* Cart Modal */
+        .cart-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+        
+        .cart-overlay.active { display: flex; justify-content: flex-end; }
+        
+        .cart-sidebar {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .cart-item-info { flex: 1; }
+        .cart-item-title { font-weight: 600; }
+        .cart-item-price { color: #666; font-size: 14px; }
+        
+        .remove-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: #8B6F47;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid #22c55e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+        }
+        
+        .notification.show { display: flex; }
+        
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Body Bloomer</div>
+        <div class="nav-icons">
+            <a href="#services" class="nav-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <span>Services</span>
+            </a>
+            <div class="nav-icon" onclick="showCart()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span>Cart</span>
+                <span class="badge hidden" id="cartBadge">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Products -->
+    <div class="products">
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=400&h=300&fit=crop" alt="Shea Butter Honey">
+            <div class="product-info">
+                <div class="product-title">Shea Butter Honey</div>
+                <div class="product-price">Rs. 280/-</div>
+                <button class="add-btn" onclick="addToCart('Shea Butter Honey', 280)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1607006412363-d4f52a5095d1?w=400&h=300&fit=crop" alt="Shea Butter Aloe Vera">
+            <div class="product-info">
+                <div class="product-title">Shea Butter Aloe Vera</div>
+                <div class="product-price">Rs. 280/-</div>
+                <button class="add-btn" onclick="addToCart('Shea Butter Aloe Vera', 280)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=300&fit=crop" alt="Shea Butter Turmeric">
+            <div class="product-info">
+                <div class="product-title">Shea Butter Turmeric</div>
+                <div class="product-price">Rs. 280/-</div>
+                <button class="add-btn" onclick="addToCart('Shea Butter Turmeric', 280)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?w=400&h=300&fit=crop" alt="Shea Butter Charcoal">
+            <div class="product-info">
+                <div class="product-title">Shea Butter Charcoal</div>
+                <div class="product-price">Rs. 280/-</div>
+                <button class="add-btn" onclick="addToCart('Shea Butter Charcoal', 280)">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="hideCart(event)">
+        <div class="cart-sidebar" onclick="event.stopPropagation()">
+            <div class="cart-header">
+                <h3>Shopping Cart (<span id="cartCount">0</span>)</h3>
+                <button class="close-btn" onclick="hideCart()">&times;</button>
+            </div>
+            <div id="cartItems">
+                <p style="color: #666; text-align: center;">Your cart is empty</p>
+            </div>
+            <div id="cartTotal" style="display: none; font-weight: bold; font-size: 18px; margin-top: 15px;"></div>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="checkmark">✓</div>
+        <div>
+            <div style="font-weight: 600;">Added to cart!</div>
+            <div style="font-size: 13px; color: #666;" id="notifProduct"></div>
+        </div>
+    </div>
+
+    <script>
+        // Cart data
+        let cart = [];
+
+        // Add to cart function
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            updateCart();
+            showNotification(name);
+        }
+
+        // Update cart badge and modal
+        function updateCart() {
+            const total = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cartBadge');
+            const count = document.getElementById('cartCount');
+            
+            if (total > 0) {
+                badge.textContent = total;
+                badge.classList.remove('hidden');
+                count.textContent = total;
+            } else {
+                badge.classList.add('hidden');
+            }
+            
+            // Update cart items list
+            const itemsDiv = document.getElementById('cartItems');
+            const totalDiv = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = '<p style="color: #666; text-align: center;">Your cart is empty</p>';
+                totalDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            let totalPrice = 0;
+            cart.forEach((item, i) => {
+                const itemTotal = item.price * item.qty;
+                totalPrice += itemTotal;
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">Rs. ${item.price}/- x ${item.qty} = Rs. ${itemTotal}/-</div>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart(${i})">Remove</button>
+                    </div>
+                `;
+            });
+            
+            itemsDiv.innerHTML = html;
+            totalDiv.style.display = 'block';
+            totalDiv.innerHTML = `Total: Rs. ${totalPrice}/-`;
+        }
+
+        // Remove from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Show notification
+        function showNotification(name) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notifProduct').textContent = name;
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 2000);
+        }
+
+        // Show/hide cart
+        function showCart() {
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        function hideCart(e) {
+            if (!e || e.target.id === 'cartOverlay') {
+                document.getElementById('cartOverlay').classList.remove('active');
+            }
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) return;
+            const items = cart.map(i => `${i.name} x${i.qty}`).join(', ');
+            const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+            const msg = `Hi! I'd like to order: ${items}. Total: Rs. ${total}/-`;
+            window.open(`https://wa.me/918848737295?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
