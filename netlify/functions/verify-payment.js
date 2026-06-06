@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const Razorpay = require('razorpay');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -65,6 +66,15 @@ exports.handler = async (event) => {
       };
     }
 
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    let orderDetails = null;
+    try {
+      orderDetails = await razorpay.orders.fetch(razorpay_order_id);
+    } catch (fetchErr) {
+      console.error('Failed to fetch order details:', fetchErr);
+    }
+
     return {
       statusCode: 200,
       headers: corsHeaders,
@@ -72,6 +82,8 @@ exports.handler = async (event) => {
         success: true,
         payment_id: razorpay_payment_id,
         order_id: razorpay_order_id,
+        customer: orderDetails?.notes || {},
+        amount: orderDetails?.amount,
       }),
     };
   } catch (error) {

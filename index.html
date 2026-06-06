@@ -1672,11 +1672,16 @@
 
                 const data = await res.json();
                 if (data.success) {
+                    // Save order items before clearing cart
+                    const orderItems = cart.map(item => ({ name: item.name, qty: item.qty, price: item.price }));
                     document.getElementById('checkoutModal').classList.remove('active');
                     document.getElementById('successPaymentId').textContent = response.razorpay_payment_id;
                     document.getElementById('successModal').classList.add('active');
                     cart = [];
                     updateCart();
+
+                    // Notify owner with customer details
+                    notifyOwner(data, orderItems);
                 } else {
                     showPaymentError('Payment could not be verified. Please contact us if amount was deducted.');
                 }
@@ -1687,6 +1692,30 @@
 
             const btn = document.getElementById('payNowBtn');
             if (btn) { btn.textContent = 'Pay Securely with Razorpay'; btn.disabled = false; }
+        }
+
+        async function notifyOwner(paymentData, orderItems) {
+            try {
+                const items = orderItems && orderItems.length > 0 ? orderItems : [];
+                const res = await fetch('/api/notify-owner', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payment_id: paymentData.payment_id,
+                        order_id: paymentData.order_id,
+                        amount: paymentData.amount,
+                        customer: paymentData.customer || {},
+                        items: items,
+                    }),
+                });
+                const data = await res.json();
+                if (data.whatsapp_url) {
+                    // Open WhatsApp to notify owner (in background tab)
+                    window.open(data.whatsapp_url, '_blank');
+                }
+            } catch (err) {
+                console.error('Owner notification error:', err);
+            }
         }
 
         function handlePaymentFailure(error) {
