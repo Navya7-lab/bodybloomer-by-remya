@@ -1,4 +1,4 @@
-const https = require('https');
+const nodemailer = require('nodemailer');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,30 +6,13 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-function sendResendEmail(payload, apiKey) {
-  return new Promise((resolve, reject) => {
-    const data = JSON.stringify(payload);
-    const options = {
-      hostname: 'api.resend.com',
-      path: '/emails',
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(data),
-      },
-    };
-    const req = https.request(options, (res) => {
-      let body = '';
-      res.on('data', chunk => body += chunk);
-      res.on('end', () => {
-        try { resolve({ status: res.statusCode, data: JSON.parse(body) }); }
-        catch { resolve({ status: res.statusCode, data: body }); }
-      });
-    });
-    req.on('error', reject);
-    req.write(data);
-    req.end();
+function createTransporter(gmailUser, gmailAppPassword) {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailAppPassword,
+    },
   });
 }
 
@@ -170,9 +153,11 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Missing order details or customer email' }) };
   }
 
-  const resendApiKey = process.env.RESEND_API_KEY;
-  if (!resendApiKey) {
-    console.error('RESEND_API_KEY not configured');
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+
+  if (!gmailUser || !gmailAppPassword) {
+    console.error('Gmail credentials not configured');
     return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ error: 'Email service not configured' }) };
   }
 
@@ -195,34 +180,24 @@ exports.handler = async (event) => {
 
   const htmlContent = buildEmailHtml({ customer, order_id, payment_id, amountRupees, itemsHtml });
 
-  const emailPayload = {
-    from: 'Body Bloomer by Remya <onboarding@resend.dev>',
-    to: [customer.email],
-    cc: [ownerEmail],
-    subject: `🌿 Your Body Bloomer Order is Confirmed! #${order_id}`,
-    html: htmlContent,
-  };
-
   try {
-    const result = await sendResendEmail(emailPayload, resendApiKey);
-    console.log('Resend email result:', result);
+    const transporter = createTransporter(gmailUser, gmailAppPassword);
+    const info = await transporter.sendMail({
+      from: `"Body Bloomer by Remya" <${gmailUser}>`,
+      to: customer.email,
+      cc: ownerEmail,
+      subject: `🌿 Your Body Bloomer Order is Confirmed! #${order_id}`,
+      html: htmlContent,
+    });
 
-    if (result.status === 200 || result.status === 201) {
-      return {
-        statusCode: 200,
-        headers: corsHeaders,
-        body: JSON.stringify({ notified: true, email_id: result.data.id, payment_id, order_id }),
-      };
-    } else {
-      console.error('Resend API error:', result);
-      return {
-        statusCode: 500,
-        headers: corsHeaders,
-        body: JSON.stringify({ error: 'Failed to send email', details: result.data }),
-      };
-    }
+    console.log('Email sent:', info.messageId);
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: JSON.stringify({ notified: true, message_id: info.messageId, payment_id, order_id }),
+    };
   } catch (err) {
     console.error('Email send error:', err);
-    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ error: 'Email sending failed' }) };
+    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ error: 'Email sending failed', details: err.message }) };
   }
 };
