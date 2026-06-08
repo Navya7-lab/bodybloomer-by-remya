@@ -1709,9 +1709,10 @@
                     }),
                 });
                 const data = await res.json();
-                if (data.whatsapp_url) {
-                    // Open WhatsApp to notify owner (in background tab)
-                    window.open(data.whatsapp_url, '_blank');
+                if (data.notified) {
+                    console.log('Order confirmation email sent:', data.email_id);
+                } else {
+                    console.error('Email notification failed:', data);
                 }
             } catch (err) {
                 console.error('Owner notification error:', err);
