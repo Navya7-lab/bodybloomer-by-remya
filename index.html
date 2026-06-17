@@ -1196,6 +1196,19 @@
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer style="background: #5c4a3d; color: #f5ebe0; padding: 30px 20px; text-align: center; margin-top: 20px;">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 15px;">Body Bloomer by Remya</h3>
+            <p style="font-size: 14px; margin-bottom: 20px; color: #e8dcc8;">Handcrafted organic skincare for naturally radiant skin.</p>
+            <a href="https://www.instagram.com/bloomerbody?igsh=MWRnM2Vxa3Voa3dubA==" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 500; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                Follow us on Instagram
+            </a>
+            <p style="font-size: 12px; margin-top: 20px; color: #c4b5a0;">© 2024 Body Bloomer by Remya. All rights reserved.</p>
+        </div>
+    </footer>
+
     <!-- Cart Overlay -->
     <div class="cart-overlay" id="cartOverlay" onclick="closeCart(event)">
         <div class="cart-sidebar" onclick="event.stopPropagation()">
@@ -1210,7 +1223,6 @@
                 Total: Rs. <span id="totalAmount">0</span>/-
             </div>
             <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
-            <button class="checkout-btn" onclick="checkoutWhatsApp()" style="margin-top: 10px; background: #22c55e;">Order via WhatsApp</button>
         </div>
     </div>
 
@@ -1339,32 +1351,32 @@
         // Products with all variants
         const products = [
             // Organic Soaps - Shea Butter (9 variants)
-            { id: 1, name: "Shea Butter Honey", price: 195, image: "/images/soaps/shea/Shea Butter Honey.png", category: "shea", type: "organic", description: "A golden treat for thirsty skin (100g) — raw honey and shea butter melt into every pore, leaving you irresistibly soft." },
-            { id: 2, name: "Shea Butter Aloe Vera", price: 190, image: "/images/soaps/shea/Shea Butter Aloe Vera.png", category: "shea", type: "organic", description: "Nature's hug in a bar (100g) — cool aloe and creamy shea calm, heal, and restore." },
-            { id: 3, name: "Shea Butter Turmeric", price: 200, image: "/images/soaps/shea/Shea Butter Turmeric.png", category: "shea", type: "organic", description: "Your daily glow ritual (100g) — turmeric and shea work together to brighten and even your skin tone." },
-            { id: 4, name: "Shea Butter Charcoal", price: 195, image: "/images/soaps/shea/ChatGPT Shea Butter Charcoal.png", category: "shea", type: "organic", description: "Deep clean, deeply loved (100g) — activated charcoal draws out impurities while shea keeps skin nourished." },
-            { id: 5, name: "Shea Butter Saffron", price: 220, image: "/images/soaps/shea/Shea Butter saffron.png", category: "shea", type: "organic", description: "Bathe like royalty (100g) — rare saffron and rich shea butter for skin that truly glows." },
-            { id: 6, name: "Shea Butter Coffee", price: 200, image: "/images/soaps/shea/Shea Butter Coffee.png", category: "shea", type: "organic", description: "Wake up your skin (100g) — coffee grounds gently exfoliate while shea butter locks in lasting moisture." },
-            { id: 7, name: "Shea Butter Goat Milk", price: 250, image: "/images/soaps/shea/Shea Butter Goat Milk.png", category: "shea", type: "organic", description: "Double the nourishment, double the love (100g) — goat milk and shea butter for skin that feels like velvet." },
-            { id: 8, name: "Shea Butter Rose", price: 200, image: "/images/soaps/shea/Shea Butter Rose.png", category: "shea", type: "organic", description: "A bouquet for your skin (100g) — rose petals and shea butter soften, soothe, and leave a delicate floral glow." },
+            { id: 1, name: "Shea Butter Honey", price: 195, image: "/images/soaps/shea/Shea Butter Honey.png", category: "shea", type: "organic", description: "A golden treat for thirsty skin (100g) - raw honey and shea butter melt into every pore, leaving you irresistibly soft." },
+            { id: 2, name: "Shea Butter Aloe Vera", price: 190, image: "/images/soaps/shea/Shea Butter Aloe Vera.png", category: "shea", type: "organic", description: "Nature's hug in a bar (100g) - cool aloe and creamy shea calm, heal, and restore." },
+            { id: 3, name: "Shea Butter Turmeric", price: 200, image: "/images/soaps/shea/Shea Butter Turmeric.png", category: "shea", type: "organic", description: "Your daily glow ritual (100g) - turmeric and shea work together to brighten and even your skin tone." },
+            { id: 4, name: "Shea Butter Charcoal", price: 195, image: "/images/soaps/shea/ChatGPT Shea Butter Charcoal.png", category: "shea", type: "organic", description: "Deep clean, deeply loved (100g) - activated charcoal draws out impurities while shea keeps skin nourished." },
+            { id: 5, name: "Shea Butter Saffron", price: 220, image: "/images/soaps/shea/Shea Butter saffron.png", category: "shea", type: "organic", description: "Bathe like royalty (100g) - rare saffron and rich shea butter for skin that truly glows." },
+            { id: 6, name: "Shea Butter Coffee", price: 200, image: "/images/soaps/shea/Shea Butter Coffee.png", category: "shea", type: "organic", description: "Wake up your skin (100g) - coffee grounds gently exfoliate while shea butter locks in lasting moisture." },
+            { id: 7, name: "Shea Butter Goat Milk", price: 250, image: "/images/soaps/shea/Shea Butter Goat Milk.png", category: "shea", type: "organic", description: "Double the nourishment, double the love (100g) - goat milk and shea butter for skin that feels like velvet." },
+            { id: 8, name: "Shea Butter Rose", price: 200, image: "/images/soaps/shea/Shea Butter Rose.png", category: "shea", type: "organic", description: "A bouquet for your skin (100g) - rose petals and shea butter soften, soothe, and leave a delicate floral glow." },
             // Organic Soaps - Goat Milk (6 variants)
-            { id: 10, name: "Goat Milk Almond", price: 220, image: "/images/organic soaps/Goat milk/Goat Milk Almond.png", category: "goat", type: "organic", description: "Silky smooth from the very first lather (100g) — almond oil and goat milk nourish deeply and gently." },
-            { id: 11, name: "Pure Goat Milk Soap", price: 200, image: "/images/organic soaps/Goat milk/Pure Goat Milk.png", category: "goat", type: "organic", description: "Pure. Gentle. Timeless (100g) — nothing but the goodness of goat milk for the softest, happiest skin." },
-            { id: 12, name: "Goat Milk Turmeric", price: 205, image: "/images/organic soaps/Goat milk/Goat Milk Turmeric.png", category: "goat", type: "organic", description: "Golden hour for your skin (100g) — turmeric brightens while goat milk nourishes for a natural, healthy glow." },
-            { id: 13, name: "Goat Milk Coffee", price: 200, image: "/images/organic soaps/Goat milk/Goat Milk Coffee.png", category: "goat", type: "organic", description: "Your morning pick-me-up for skin (100g) — coffee exfoliates and goat milk replenishes for a fresh, awake glow." },
-            { id: 14, name: "Goat Milk Aloe Vera", price: 190, image: "/images/organic soaps/Goat milk/Goat Milk Aloe Vera.png", category: "goat", type: "organic", description: "A cooling ritual your skin will crave (100g) — aloe vera and goat milk soothe irritation and restore balance." },
-            { id: 15, name: "Goat Milk Neem", price: 210, image: "/images/organic soaps/Goat milk/Goat Milk Neem.png", category: "goat", type: "organic", description: "Nature's purifier, bottled in a bar (100g) — neem and goat milk clear, calm, and care for troubled skin." },
+            { id: 10, name: "Goat Milk Almond", price: 220, image: "/images/organic soaps/Goat milk/Goat Milk Almond.png", category: "goat", type: "organic", description: "Silky smooth from the very first lather (100g) - almond oil and goat milk nourish deeply and gently." },
+            { id: 11, name: "Pure Goat Milk Soap", price: 200, image: "/images/organic soaps/Goat milk/Pure Goat Milk.png", category: "goat", type: "organic", description: "Pure. Gentle. Timeless (100g) - nothing but the goodness of goat milk for the softest, happiest skin." },
+            { id: 12, name: "Goat Milk Turmeric", price: 205, image: "/images/organic soaps/Goat milk/Goat Milk Turmeric.png", category: "goat", type: "organic", description: "Golden hour for your skin (100g) - turmeric brightens while goat milk nourishes for a natural, healthy glow." },
+            { id: 13, name: "Goat Milk Coffee", price: 200, image: "/images/organic soaps/Goat milk/Goat Milk Coffee.png", category: "goat", type: "organic", description: "Your morning pick-me-up for skin (100g) - coffee exfoliates and goat milk replenishes for a fresh, awake glow." },
+            { id: 14, name: "Goat Milk Aloe Vera", price: 190, image: "/images/organic soaps/Goat milk/Goat Milk Aloe Vera.png", category: "goat", type: "organic", description: "A cooling ritual your skin will crave (100g) - aloe vera and goat milk soothe irritation and restore balance." },
+            { id: 15, name: "Goat Milk Neem", price: 210, image: "/images/organic soaps/Goat milk/Goat Milk Neem.png", category: "goat", type: "organic", description: "Nature's purifier, bottled in a bar (100g) - neem and goat milk clear, calm, and care for troubled skin." },
             // Organic Soaps - Triple Butter (5 variants)
-            { id: 16, name: "Triple Butter Turmeric", price: 205, image: "/images/organic soaps/tripple butter/Triple butter Turmeric.png", category: "triple", type: "organic", description: "The golden formula your skin deserves (100g) — turmeric and triple butter for a radiant, even-toned glow." },
-            { id: 17, name: "Triple Butter Aloe Vera", price: 190, image: "/images/organic soaps/tripple butter/Triple Butter Aloe Vera.png", category: "triple", type: "organic", description: "Three butters, one perfect bar (100g) — shea, cocoa, and mango butter fused with aloe for unmatched moisture." },
-            { id: 18, name: "Triple Butter Honey", price: 195, image: "/images/organic soaps/tripple butter/Triple Butter Honey.png", category: "triple", type: "organic", description: "Richness in every lather (100g) — honey and three butters wrap your skin in deep, lasting nourishment." },
-            { id: 19, name: "Triple Butter Saffron", price: 220, image: "/images/organic soaps/tripple butter/tripple butter saffron.png", category: "triple", type: "organic", description: "Luxury you can feel (100g) — saffron and three butters for skin that looks and feels truly pampered." },
+            { id: 16, name: "Triple Butter Turmeric", price: 205, image: "/images/organic soaps/tripple butter/Triple butter Turmeric.png", category: "triple", type: "organic", description: "The golden formula your skin deserves (100g) - turmeric and triple butter for a radiant, even-toned glow." },
+            { id: 17, name: "Triple Butter Aloe Vera", price: 190, image: "/images/organic soaps/tripple butter/Triple Butter Aloe Vera.png", category: "triple", type: "organic", description: "Three butters, one perfect bar (100g) - shea, cocoa, and mango butter fused with aloe for unmatched moisture." },
+            { id: 18, name: "Triple Butter Honey", price: 195, image: "/images/organic soaps/tripple butter/Triple Butter Honey.png", category: "triple", type: "organic", description: "Richness in every lather (100g) - honey and three butters wrap your skin in deep, lasting nourishment." },
+            { id: 19, name: "Triple Butter Saffron", price: 220, image: "/images/organic soaps/tripple butter/tripple butter saffron.png", category: "triple", type: "organic", description: "Luxury you can feel (100g) - saffron and three butters for skin that looks and feels truly pampered." },
             // Bath Salt (1 variant)
-            { id: 21, name: "Citrus Glow Bath Salt", price: 180, image: "/images/extra/orange bath salt.png", category: "bathsalt", type: "bathsalt", description: "Sink in and let go (100g) — citrus-infused salts dissolve tension, revive tired skin, and uplift your senses." },
+            { id: 21, name: "Citrus Glow Bath Salt", price: 180, image: "/images/extra/orange bath salt.png", category: "bathsalt", type: "bathsalt", description: "Sink in and let go (100g) - citrus-infused salts dissolve tension, revive tired skin, and uplift your senses." },
             // Shower Gel (1 variant)
-            { id: 22, name: "Lavender Calm Shower Gel", price: 300, image: "/images/extra/lavender shower gel.png", category: "showergel", type: "showergel", description: "A calming escape in every shower (150ml approx) — lavender lather that melts away stress and leaves skin silky soft." },
+            { id: 22, name: "Lavender Calm Shower Gel", price: 300, image: "/images/extra/lavender shower gel.png", category: "showergel", type: "showergel", description: "A calming escape in every shower (150ml approx) - lavender lather that melts away stress and leaves skin silky soft." },
             // Bath Powder (1 variant)
-            { id: 23, name: "Ayur Glow Bath Powder", price: 100, image: "/images/extra/bath powder.png", category: "bathpowder", type: "bathpowder", description: "An ancient ritual, rediscovered (100g) — wild turmeric and green gram gently cleanse, brighten, and reveal glowing skin." },
+            { id: 23, name: "Ayur Glow Bath Powder", price: 100, image: "/images/extra/bath powder.png", category: "bathpowder", type: "bathpowder", description: "An ancient ritual, rediscovered (100g) - wild turmeric and green gram gently cleanse, brighten, and reveal glowing skin." },
             // Lip Balm (1 variant)
             { id: 24, name: "Root Red Lip Balm", price: 115, image: "/images/extra/blush pink lipbalm.png", category: "lipbalm", type: "lipbalm", description: "A naturally tinted organic balm (8g) for deeply nourished lips and a soft red glow." }
         ];
