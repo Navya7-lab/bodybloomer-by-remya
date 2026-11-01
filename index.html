@@ -1556,7 +1556,7 @@
             row.className = 'mini-row';
             row.innerHTML = `
                 <div class="form-group"><label>Flavour</label><select class="mini-flavour">${miniSoapOptions(miniFlavours)}</select></div>
-                <div class="form-group"><label>Base</label><select class="mini-base">${miniSoapOptions(miniBases)}</select></div>
+                <div class="form-group"><label>Type</label><select class="mini-base">${miniSoapOptions(miniBases)}</select></div>
                 <div class="form-group"><label>Shape</label><select class="mini-shape">${miniSoapOptions(miniShapes)}</select></div>
                 <div class="form-group"><label>Qty</label><input type="number" class="mini-qty" min="0" value="0" oninput="updateMiniCount()"></div>
                 <button type="button" class="remove-item" onclick="this.parentElement.remove(); updateMiniCount();">Remove</button>
