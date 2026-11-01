@@ -1205,6 +1205,7 @@
             <button class="cat-btn active" onclick="filterCategory('shea')" id="btn-shea">Shea Butter</button>
             <button class="cat-btn" onclick="filterCategory('goat')" id="btn-goat">Goat Milk</button>
             <button class="cat-btn" onclick="filterCategory('triple')" id="btn-triple">Triple Butter</button>
+            <button class="cat-btn" onclick="filterCategory('mini')" id="btn-mini">Mini Soaps</button>
         </div>
         
         <!-- Products Grid -->
@@ -1212,7 +1213,7 @@
             <!-- Products inserted by JavaScript -->
         </div>
 
-        <div id="miniSoaps" style="margin-top: 60px;">
+        <div id="miniSoaps" style="margin-top: 60px; display: none;">
             <h2 class="section-title">Mini Soaps - Trial Pack</h2>
             <div class="mini-soap-wrap">
                 <img src="/images/organic soaps/minisoap/mini soap.png" alt="Mini Soaps" class="mini-soap-img">
@@ -1459,13 +1460,13 @@
             // Show/hide filter buttons for organic soaps only
             const buttonsDiv = document.getElementById('categoryButtons');
             const miniSoapsDiv = document.getElementById('miniSoaps');
+            document.getElementById('productsGrid').style.display = '';
+            miniSoapsDiv.style.display = 'none';
             if (service === 'organic') {
                 buttonsDiv.style.display = 'flex';
-                miniSoapsDiv.style.display = 'block';
                 renderProducts('organic', 'all');
             } else {
                 buttonsDiv.style.display = 'none';
-                miniSoapsDiv.style.display = 'none';
                 renderProducts(service, 'all');
             }
             
@@ -1523,7 +1524,10 @@
         function filterCategory(category) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + category).classList.add('active');
-            renderProducts('organic', category);
+            const isMini = category === 'mini';
+            document.getElementById('productsGrid').style.display = isMini ? 'none' : '';
+            document.getElementById('miniSoaps').style.display = isMini ? 'block' : 'none';
+            if (!isMini) renderProducts('organic', category);
         }
 
         const MINI_SOAP_PRICE = 10;
