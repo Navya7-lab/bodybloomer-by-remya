@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Body Bloomer | Organic Skincare</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <style>
         :root {
             --primary: #8B6F47;
@@ -259,6 +260,18 @@
             gap: 25px;
         }
         
+        .sold-out-label {
+            color: #b91c1c;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .add-to-cart:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+        }
+
         /* Mini Soaps */
         .mini-soap-wrap {
             max-width: 1000px;
@@ -1453,6 +1466,12 @@
         // Cart
         let cart = [];
 
+        // Stock status from public/data/stock.json (managed via /admin)
+        let stockStatus = {};
+        function isInStock(id) {
+            return stockStatus[id] !== false;
+        }
+
         // Show service products
         function showService(service) {
             currentService = service;
@@ -1524,8 +1543,11 @@
                     <div class="product-info">
                         <div class="product-name">${p.name}</div>
                         ${p.description ? `<div style="font-size: 12px; color: #666; margin: 5px 0; line-height: 1.4;">${p.description}</div>` : ''}
+                        ${isInStock(p.id) ? '' : '<div class="sold-out-label">Sold Out</div>'}
                         <div class="product-price">Rs. ${p.price}/-</div>
-                        <button class="add-to-cart" id="btn-${p.id}" onclick="addToCart(${p.id})">Add to Cart</button>
+                        ${isInStock(p.id)
+                            ? `<button class="add-to-cart" id="btn-${p.id}" onclick="addToCart(${p.id})">Add to Cart</button>`
+                            : `<button class="add-to-cart" id="btn-${p.id}" disabled>Out of Stock</button>`}
                     </div>
                 </div>
             `;
@@ -1601,6 +1623,7 @@
 
         // Add to cart
         function addToCart(id) {
+            if (!isInStock(id)) return;
             const product = products.find(p => p.id === id);
             const existing = cart.find(item => item.id === id);
             
@@ -1917,7 +1940,13 @@
         }
 
         // Init
-        renderProducts('organic', 'shea');
+        fetch('/data/stock.json')
+            .then(res => res.json())
+            .then(data => {
+                (data.products || []).forEach(item => { stockStatus[item.id] = item.in_stock; });
+            })
+            .catch(() => {})
+            .finally(() => renderProducts('organic', 'shea'));
         updateCart();
         startAutoSlide();
         

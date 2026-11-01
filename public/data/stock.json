@@ -1,0 +1,27 @@
+{
+  "products": [
+    { "id": 1, "name": "Shea Butter Honey", "in_stock": true },
+    { "id": 2, "name": "Shea Butter Aloe Vera", "in_stock": true },
+    { "id": 3, "name": "Shea Butter Turmeric", "in_stock": true },
+    { "id": 4, "name": "Shea Butter Charcoal", "in_stock": true },
+    { "id": 5, "name": "Shea Butter Saffron", "in_stock": true },
+    { "id": 6, "name": "Shea Butter Coffee", "in_stock": true },
+    { "id": 7, "name": "Shea Butter Goat Milk", "in_stock": true },
+    { "id": 8, "name": "Shea Butter Rose", "in_stock": true },
+    { "id": 10, "name": "Goat Milk Almond", "in_stock": true },
+    { "id": 11, "name": "Pure Goat Milk Soap", "in_stock": true },
+    { "id": 12, "name": "Goat Milk Turmeric", "in_stock": true },
+    { "id": 13, "name": "Goat Milk Coffee", "in_stock": true },
+    { "id": 14, "name": "Goat Milk Aloe Vera", "in_stock": true },
+    { "id": 15, "name": "Goat Milk Neem", "in_stock": true },
+    { "id": 16, "name": "Triple Butter Turmeric", "in_stock": true },
+    { "id": 17, "name": "Triple Butter Aloe Vera", "in_stock": true },
+    { "id": 18, "name": "Triple Butter Honey", "in_stock": true },
+    { "id": 19, "name": "Triple Butter Saffron", "in_stock": true },
+    { "id": 21, "name": "Citrus Glow Bath Salt", "in_stock": true },
+    { "id": 22, "name": "Lavender Calm Shower Gel", "in_stock": true },
+    { "id": 23, "name": "Ayur Glow Bath Powder", "in_stock": true },
+    { "id": 24, "name": "Root Red Lip Balm", "in_stock": true },
+    { "id": 25, "name": "Blush & Vanilla Body Mist", "in_stock": true }
+  ]
+}

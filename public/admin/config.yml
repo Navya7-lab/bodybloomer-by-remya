@@ -1,0 +1,21 @@
+backend:
+  name: git-gateway
+  branch: main
+
+collections:
+  - name: "stock"
+    label: "Product Stock"
+    files:
+      - name: "products_stock"
+        label: "Product Stock"
+        file: "public/data/stock.json"
+        fields:
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            allow_add: false
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int" }
+              - { label: "Product", name: "name", widget: "string", hint: "For reference only. Do not change." }
+              - { label: "In Stock", name: "in_stock", widget: "boolean", default: true, hint: "Turn off to show Sold Out on the website." }
