@@ -1192,6 +1192,13 @@
                     <p>Soft on your lips, naturally.</p>
                 </div>
             </div>
+            <div class="service-card" onclick="showService('bodymist')">
+                <img src="/images/extra/body mist.jpeg" alt="Body Mist" class="service-img">
+                <div class="service-content">
+                    <h3>Body Mist</h3>
+                    <p>Blush & vanilla, soft and rosy.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1218,7 +1225,7 @@
             <div class="mini-soap-wrap">
                 <img src="/images/organic soaps/minisoap/mini soap.png" alt="Mini Soaps" class="mini-soap-img">
                 <div>
-                    <p class="mini-soap-note">Rs. 10/- each. Minimum order of 15 mini soaps in total. Try different flavours and bases before you commit.</p>
+                    <p class="mini-soap-note">Rs. 10/- each, 7g per soap. Minimum order of 15 mini soaps in total. Try different flavours and bases before you commit. A thoughtful return gift for your loved ones.</p>
                     <div id="miniRows"></div>
                     <button type="button" class="btn-secondary" onclick="addMiniRow()">+ Add Flavour</button>
                     <p style="margin: 16px 0; font-weight: 600;">Total: <span id="miniCount">0</span> / 15 minimum</p>
@@ -1436,7 +1443,9 @@
             // Bath Powder (1 variant)
             { id: 23, name: "Ayur Glow Bath Powder", price: 100, image: "/images/extra/bath powder.png", category: "bathpowder", type: "bathpowder", description: "An ancient ritual, rediscovered (100g) - wild turmeric and green gram gently cleanse, brighten, and reveal glowing skin." },
             // Lip Balm (1 variant)
-            { id: 24, name: "Root Red Lip Balm", price: 115, image: "/images/extra/blush pink lipbalm.png", category: "lipbalm", type: "lipbalm", description: "A naturally tinted organic balm (8g) for deeply nourished lips and a soft red glow." }
+            { id: 24, name: "Root Red Lip Balm", price: 115, image: "/images/extra/blush pink lipbalm.png", category: "lipbalm", type: "lipbalm", description: "A naturally tinted organic balm (8g) for deeply nourished lips and a soft red glow." },
+            // Body Mist (1 variant)
+            { id: 25, name: "Blush & Vanilla Body Mist", price: 99, image: "/images/extra/body mist.jpeg", category: "bodymist", type: "bodymist", description: "Soft, rosy and unforgettable (100g) - alcohol free, with a blush of rose and a warm vanilla flavour." }
         ];
 
         let currentService = 'organic';
@@ -1452,7 +1461,8 @@
                 bathsalt: 'Bath Salt Collection',
                 showergel: 'Shower Gel',
                 bathpowder: 'Bath Powder Collection',
-                lipbalm: 'Lip Balm Collection'
+                lipbalm: 'Lip Balm Collection',
+                bodymist: 'Body Mist'
             };
             
             document.getElementById('productsTitle').textContent = titles[service];
@@ -1477,7 +1487,8 @@
                     (service === 'bathsalt' && index === 1) ||
                     (service === 'showergel' && index === 2) ||
                     (service === 'bathpowder' && index === 3) ||
-                    (service === 'lipbalm' && index === 4)) {
+                    (service === 'lipbalm' && index === 4) ||
+                    (service === 'bodymist' && index === 5)) {
                     card.classList.add('active');
                 }
             });
