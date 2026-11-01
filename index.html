@@ -259,6 +259,49 @@
             gap: 25px;
         }
         
+        /* Mini Soaps */
+        .mini-soap-wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+            gap: 32px;
+            align-items: start;
+        }
+
+        .mini-soap-img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .mini-soap-note {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .mini-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 12px;
+        }
+
+        .mini-row .form-group {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .mini-soap-wrap {
+                grid-template-columns: 1fr;
+            }
+            .mini-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         /* Single product item styling */
         .products-grid:has(.product-card:only-child) {
             grid-template-columns: minmax(260px, 320px);
@@ -1168,6 +1211,20 @@
         <div class="products-grid" id="productsGrid">
             <!-- Products inserted by JavaScript -->
         </div>
+
+        <div id="miniSoaps" style="margin-top: 60px;">
+            <h2 class="section-title">Mini Soaps - Trial Pack</h2>
+            <div class="mini-soap-wrap">
+                <img src="/images/organic soaps/minisoap/mini soap.png" alt="Mini Soaps" class="mini-soap-img">
+                <div>
+                    <p class="mini-soap-note">Rs. 10/- each. Minimum order of 15 mini soaps in total. Try different flavours and bases before you commit.</p>
+                    <div id="miniRows"></div>
+                    <button type="button" class="btn-secondary" onclick="addMiniRow()">+ Add Flavour</button>
+                    <p style="margin: 16px 0; font-weight: 600;">Total: <span id="miniCount">0</span> / 15 minimum</p>
+                    <button type="button" class="submit-btn" onclick="addMiniSoapsToCart()">Add Mini Soaps to Cart</button>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Testimonials Section -->
@@ -1401,11 +1458,14 @@
             
             // Show/hide filter buttons for organic soaps only
             const buttonsDiv = document.getElementById('categoryButtons');
+            const miniSoapsDiv = document.getElementById('miniSoaps');
             if (service === 'organic') {
                 buttonsDiv.style.display = 'flex';
+                miniSoapsDiv.style.display = 'block';
                 renderProducts('organic', 'all');
             } else {
                 buttonsDiv.style.display = 'none';
+                miniSoapsDiv.style.display = 'none';
                 renderProducts(service, 'all');
             }
             
@@ -1465,6 +1525,64 @@
             document.getElementById('btn-' + category).classList.add('active');
             renderProducts('organic', category);
         }
+
+        const MINI_SOAP_PRICE = 10;
+        const MINI_SOAP_MIN_QTY = 15;
+        const miniFlavours = ['Coffee', 'Multani Mitti', 'Turmeric'];
+        const miniBases = ['Shea Butter', 'Goat Milk', 'Triple Butter'];
+        const miniShapes = ['Flowers', 'Peppa Pig'];
+
+        function miniSoapOptions(list) {
+            return list.map(o => `<option value="${o}">${o}</option>`).join('');
+        }
+
+        function addMiniRow() {
+            const row = document.createElement('div');
+            row.className = 'mini-row';
+            row.innerHTML = `
+                <div class="form-group"><label>Flavour</label><select class="mini-flavour">${miniSoapOptions(miniFlavours)}</select></div>
+                <div class="form-group"><label>Base</label><select class="mini-base">${miniSoapOptions(miniBases)}</select></div>
+                <div class="form-group"><label>Shape</label><select class="mini-shape">${miniSoapOptions(miniShapes)}</select></div>
+                <div class="form-group"><label>Qty</label><input type="number" class="mini-qty" min="0" value="0" oninput="updateMiniCount()"></div>
+                <button type="button" class="remove-item" onclick="this.parentElement.remove(); updateMiniCount();">Remove</button>
+            `;
+            document.getElementById('miniRows').appendChild(row);
+            updateMiniCount();
+        }
+
+        function updateMiniCount() {
+            const total = [...document.querySelectorAll('.mini-qty')].reduce((sum, el) => sum + (parseInt(el.value, 10) || 0), 0);
+            document.getElementById('miniCount').textContent = total;
+        }
+
+        function addMiniSoapsToCart() {
+            const selections = [...document.querySelectorAll('.mini-row')].map(row => ({
+                flavour: row.querySelector('.mini-flavour').value,
+                base: row.querySelector('.mini-base').value,
+                shape: row.querySelector('.mini-shape').value,
+                qty: parseInt(row.querySelector('.mini-qty').value, 10) || 0
+            })).filter(s => s.qty > 0);
+            const total = selections.reduce((sum, s) => sum + s.qty, 0);
+            if (total < MINI_SOAP_MIN_QTY) return alert(`Minimum order is ${MINI_SOAP_MIN_QTY} mini soaps in total. You have ${total}.`);
+
+            selections.forEach(s => {
+                const id = `mini-${s.flavour}-${s.base}-${s.shape}`.toLowerCase().replace(/\s+/g, '-');
+                const name = `Mini Soap - ${s.flavour} (${s.base}, ${s.shape})`;
+                const existing = cart.find(item => item.id === id);
+                if (existing) {
+                    existing.qty += s.qty;
+                } else {
+                    cart.push({ id, name, price: MINI_SOAP_PRICE, qty: s.qty });
+                }
+            });
+
+            updateCart();
+            showNotification(`${total} Mini Soaps`);
+            document.getElementById('miniRows').innerHTML = '';
+            addMiniRow();
+        }
+
+        addMiniRow();
 
         // Add to cart
         function addToCart(id) {
