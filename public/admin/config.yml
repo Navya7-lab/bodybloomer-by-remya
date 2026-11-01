@@ -2,6 +2,10 @@ backend:
   name: git-gateway
   branch: main
 
+media_folder: "public/images/uploads"
+media_library:
+  name: default
+
 collections:
   - name: "stock"
     label: "Product Stock"
